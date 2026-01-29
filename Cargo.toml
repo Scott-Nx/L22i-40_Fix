@@ -1,0 +1,56 @@
+[package]
+name = "brightstay"
+version = "0.1.0"
+edition = "2024"
+authors = ["Scott-Nx"]
+description = "Cross-platform monitor brightness manager for L22i-40"
+license = "GPL-3.0"
+repository = "https://github.com/Scott-Nx/L22i-40_Fix"
+rust-version = "1.85"
+
+[dependencies]
+# CLI and configuration
+clap = { version = "4.5.55", features = ["derive", "cargo"] }
+serde = { version = "1.0", features = ["derive"] }
+toml = "0.8"
+
+# Monitor control - Native Rust DDC/CI
+ddc-hi = "0.4.1"
+ddc = "0.3.0"
+
+# Error handling and logging
+anyhow = "1.0.100"
+thiserror = "2.0.18"
+tracing = "0.1.44"
+tracing-subscriber = { version = "0.3.22", features = ["env-filter"] }
+
+# Platform-specific dependencies
+[target.'cfg(windows)'.dependencies]
+windows = { version = "0.62.2", features = [
+    "Win32_Foundation",
+    "Win32_System_Power",
+    "Win32_System_TaskScheduler",
+    "Win32_System_Com",
+    "Win32_UI_WindowsAndMessaging",
+    "Win32_System_SystemServices",
+] }
+
+[target.'cfg(unix)'.dependencies]
+nix = { version = "0.31.1", features = ["event"] }
+zbus = "5.13.2"
+
+[dev-dependencies]
+tempfile = "3.14"
+
+[[bin]]
+name = "brightstay"
+path = "src/main.rs"
+
+[profile.release]
+strip = true
+lto = true
+opt-level = 3
+
+[profile.dev]
+opt-level = 0
+

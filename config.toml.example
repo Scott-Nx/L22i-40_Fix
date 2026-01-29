@@ -1,0 +1,60 @@
+# BrightStay Configuration File
+# 
+# This file configures the monitor brightness manager for the Lenovo L22i-40 monitor.
+# Copy this file to the appropriate location for your platform:
+#   - Linux: ~/.config/brightstay/config.toml
+#   - Windows: %APPDATA%\BrightStay\config.toml
+#
+# Or specify a custom path with: brightstay --config /path/to/config.toml
+
+[monitor]
+# Monitor identifier - how to find your monitor
+#
+# On Linux (using product code):
+#   Run: ddcutil detect
+#   Look for "Product code" in the output
+#   Example: identifier = "26542"
+#
+# On Windows (using instance name):
+#   Use the full instance name from Device Manager
+#   Example: identifier = "DISPLAY\\LEN67AE\\5&16e23401&0&UID277"
+#
+# You can also use model name, manufacturer ID, or serial number
+identifier = "26542"
+
+# Target brightness level (0-100)
+# The brightness to set when the monitor is detected
+brightness_level = 5
+
+# VCP code for brightness control
+# 0x10 is the standard DDC/CI code for brightness
+# Only change this if your monitor uses a different code
+vcp_code = 16  # 0x10 in decimal
+
+# Optional friendly name for display purposes
+friendly_name = "Lenovo L22i-40"
+
+
+[scheduler]
+# Whether automatic brightness adjustment is enabled
+enabled = true
+
+# Task/service name
+task_name = "BrightStay"
+
+# Windows only: Task Scheduler path
+# This is the folder path in Task Scheduler where the task is located
+task_path = "\\NChalapinyo\\"
+
+# Trigger type: when to run the brightness adjustment
+# Options: "on_connect" (default), "on_boot", "periodic"
+trigger = "on_connect"
+
+
+[logging]
+# Log level: trace, debug, info, warn, error
+level = "info"
+
+# Optional: Log to a file
+# file = "/var/log/brightstay.log"  # Linux
+# file = "C:\\ProgramData\\BrightStay\\brightstay.log"  # Windows

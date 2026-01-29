@@ -2,6 +2,91 @@
 
 The utility designed to fix a firmware issue on the L22i-40 monitor. When the monitor wakes from sleep mode while in a custom user color mode (custom RGB settings), it incorrectly resets its brightness level to 100%. This tool detects the monitor state and reapplies the desired brightness setting automatically, preserving your calibration and preventing unwanted brightness jumps.
 
+## Cross-Platform Rust Implementation
+
+BrightStay is now available as a cross-platform Rust application that works on both Windows and Linux with a single binary, no runtime dependencies required.
+
+### Building from Source
+
+```bash
+# Install Rust (if not already installed)
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+# Linux: Install required system dependencies
+sudo apt-get install libudev-dev pkg-config
+
+# Build the release binary
+cargo build --release
+
+# The binary will be at: target/release/brightstay
+```
+
+### CLI Usage
+
+```bash
+# Initialize configuration file
+brightstay config init
+
+# List detected monitors (find your monitor's identifier)
+brightstay list
+
+# Run brightness adjustment manually
+brightstay run
+
+# Override brightness level
+brightstay run --brightness 10
+
+# Check current status
+brightstay status
+
+# Toggle scheduled task on/off
+brightstay toggle
+
+# Get/set brightness directly on a specific monitor
+brightstay brightness --monitor 0
+brightstay brightness --monitor 0 --set 5
+```
+
+### Configuration
+
+Configuration file locations:
+- **Linux**: `~/.config/brightstay/config.toml`
+- **Windows**: `%APPDATA%\BrightStay\config.toml`
+
+Example configuration (see `config.toml.example`):
+
+```toml
+[monitor]
+identifier = "26542"          # Product code (Linux) or instance name (Windows)
+brightness_level = 5          # Target brightness (0-100)
+vcp_code = 16                 # DDC/CI VCP code for brightness (0x10)
+friendly_name = "Lenovo L22i-40"
+
+[scheduler]
+enabled = true
+task_name = "BrightStay"
+task_path = "\\NChalapinyo\\"  # Windows Task Scheduler path
+trigger = "on_connect"
+
+[logging]
+level = "info"
+```
+
+### Features
+
+- **Single Binary**: No runtime dependencies (replaces ddcutil and MonitorConfig PowerShell module)
+- **Cross-Platform**: Same codebase for Windows and Linux
+- **DDC/CI Direct**: Native DDC/CI protocol communication via `ddc-hi` crate
+- **TOML Configuration**: Easy-to-edit configuration files
+- **Scheduler Integration**: Windows Task Scheduler and Linux systemd support
+- **CLI Interface**: Full command-line interface with subcommands
+
+---
+
+## Legacy Scripts
+
+The original PowerShell (Windows) and Bash (Linux) scripts are still available for reference.
+
 ## How it works
 
 - Detects when the display resumes from sleep or the workstation unlocks.
@@ -10,14 +95,15 @@ The utility designed to fix a firmware issue on the L22i-40 monitor. When the mo
 
 ## Requirements
 
-### Windows:
+### Windows (Legacy PowerShell):
 - PowerShell 5.1 or PowerShell 7+
 - PowerShell module: MonitorConfig (from PowerShell Gallery)
 - DDC/CI enabled on your monitor (Hold button for a few seconds to toggle)
 
-### Linux:
+### Linux (Legacy Bash):
 - systemd
 - ddcutil
+
 
 If your system enforces script signing, ensure your execution policy allows running this tool use `-ExecutionPolicy Bypass` in task action.
 

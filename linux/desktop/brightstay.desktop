@@ -1,7 +1,0 @@
-[Desktop Entry]
-Name=BrightStay
-Exec=/usr/bin/BrightStay.sh
-Icon=/usr/share/icons/breeze-dark/devices/32/video-display-brightness-symbolic.svg
-Terminal=false
-Type=Application
-Categories=Utility;
